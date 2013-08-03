@@ -88,5 +88,6 @@ class RobotTestCase(unittest.TestCase):
             robot.Robot(pos=(1, 5), limit=(2, 4))
             robot.Robot(pos=(2, 5), limit=(2, 4))
 
+
 if __name__ == "__main__":
     unittest.main()

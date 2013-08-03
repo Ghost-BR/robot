@@ -1,10 +1,6 @@
 # coding: utf-8
 
 
-def check_limit():
-    pass
-
-
 class OutBoundError(Exception):
     '''Error when try to move robot out of limits'''
 
