@@ -1,6 +1,14 @@
 # coding: utf-8
 
 
+def check_limit():
+    pass
+
+
+class OutBoundError(Exception):
+    '''Error when try to move robot out of limits'''
+
+
 class Robot(object):
 
     VALID_ORIENTATION = ['N', 'L', 'S', 'O']
@@ -10,10 +18,16 @@ class Robot(object):
         'S': 2,
         'O': 3,
     }
+    WALK = {
+        'N': (0, 1),
+        'L': (1, 0),
+        'S': (0, -1),
+        'O': (-1, 0),
+    }
 
-    def __init__(self, x=0, y=0, pointing='N'):
-        self.x = x
-        self.y = y
+    def __init__(self, pos=(0, 0), pointing='N', limit=(10, 10)):
+        self.limit_x, self.limit_y = limit
+        self.pos = pos
         self.pointing = pointing
 
     @property
@@ -27,36 +41,39 @@ class Robot(object):
                              .format(new_pointing))
         self._pointing = new_pointing
 
+    @property
     def pos(self):
-        return (self.x, self.y, self.pointing)
+        return self._x, self._y
+
+    @pos.setter
+    def pos(self, new_pos):
+        x, y = new_pos
+
+        if x < 0 or x >= self.limit_x or y < 0 or y >= self.limit_y:
+            raise OutBoundError('Moving out of limits')
+
+        self._x = x
+        self._y = y
+
+    @property
+    def full_position(self):
+        return self.pos, self.pointing
 
     def turn(self, direction):
-        if direction not in ('L', 'R'):
-            raise ValueError('{} is not a valid value for direction'
-                             .format(direction))
         index = self.MAP_ORIENTATION[self.pointing]
         if direction == 'L':
             index -= 1
-        else:
+        elif(direction == 'R'):
             index += 1
+        else:
+            raise ValueError('{} is not a valid value for direction'
+                             .format(direction))
 
-        if index < 0:
-            index = 3
-        elif index > 3:
-            index = 0
-
-        self.pointing = self.VALID_ORIENTATION[index]
+        self.pointing = self.VALID_ORIENTATION[index % 4]
 
     def walk(self):
-        if self._pointing == 'N':
-            self.y += 1
-        elif self._pointing == 'S':
-            self.y -= 1
-        elif self._pointing == 'L':
-            self.x += 1
-        elif self._pointing == 'O':
-            self.x -= 1
+        x, y = self.WALK[self._pointing]
+        self.pos = (self._x + x, self._y + y)
 
-    def teletransport(self, x, y):
-        self.x = x
-        self.y = y
+    def teletransport(self, new_pos):
+        self.pos = new_pos
