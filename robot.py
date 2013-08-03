@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 VALID_ORIENTATION = ['N', 'E', 'S', 'W']
