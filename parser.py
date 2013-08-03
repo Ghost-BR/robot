@@ -3,6 +3,7 @@ import robot
 
 
 def limit(line):
+    '''Parse limit of board'''
     values = [int(value) for value in line.strip().split()]
     if len(values) != 2:
         raise ValueError('Wrong limit passed')
@@ -10,6 +11,7 @@ def limit(line):
 
 
 def initial_position(line):
+    '''Parse initial position'''
     values = [value for value in line.strip().split()]
     if len(values) != 3:
         raise ValueError('Wrong initial position passed')
@@ -20,6 +22,7 @@ def initial_position(line):
 
 
 def read_commands(line):
+    '''Parse a line of commands in tubles to be passed to robot'''
     line = line.strip()
     command_list = []
 
@@ -41,6 +44,7 @@ def read_commands(line):
 
 
 def parse_file(fname):
+    '''Parse a file and return limit, initial, position and commands'''
     with open(fname) as fp:
         limits = limit(fp.readline())
         position = initial_position(fp.readline())

@@ -16,6 +16,12 @@ class RobotTestCase(unittest.TestCase):
         r = robot.Robot((6, 7), 'E')
         self.assertEqual(r.pos, (6, 7))
         self.assertEqual(r.pointing, 'E')
+        r = robot.Robot(position=((6, 7), 'E'))
+        self.assertEqual(r.pos, (6, 7))
+        self.assertEqual(r.pointing, 'E')
+        r = robot.Robot(pos=(2, 2), pointing='S', position=((6, 7), 'E'))
+        self.assertEqual(r.pos, (6, 7))
+        self.assertEqual(r.pointing, 'E')
 
     def test_posision(self):
         r = robot.Robot()

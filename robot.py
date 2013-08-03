@@ -1,14 +1,5 @@
 # coding: utf-8
 
-
-class OutBoundError(Exception):
-    '''Error when try to move robot out of limits'''
-
-
-class CommandError(Exception):
-    '''Error when try to pass a wrong command'''
-
-
 VALID_ORIENTATION = ['N', 'E', 'S', 'W']
 
 MAP_ORIENTATION = {
@@ -26,10 +17,24 @@ MOVE = {
 }
 
 
+class OutBoundError(Exception):
+    '''Error when try to move robot out of limits'''
+
+
+class CommandError(Exception):
+    '''Error when try to pass a wrong command'''
+
+
 class Robot(object):
+    '''Robot that can move in a board'''
 
     def __init__(self, pos=(0, 0), pointing='N', limits=(10, 10),
                  position=None):
+        '''pos tuple(x, y)
+        pointing orientation
+        or position tuple( tuple(x,y), orientation)
+        limits possible area that robot can move
+        '''
         if position is not None:
             pos = position[0]
             pointing = position[1]
@@ -63,6 +68,7 @@ class Robot(object):
         self._y = y
 
     def turn(self, direction):
+        '''turn robot to left or right'''
         index = MAP_ORIENTATION[self.pointing]
         if direction == 'L':
             index -= 1
@@ -75,13 +81,16 @@ class Robot(object):
         self.pointing = VALID_ORIENTATION[index % 4]
 
     def move(self):
+        '''Robot move forward'''
         x, y = MOVE[self._pointing]
         self.pos = (self._x + x, self._y + y)
 
     def teleport(self, new_pos):
+        '''Robot teleport to a given position'''
         self.pos = new_pos
 
     def from_commands(self, commands):
+        '''Robot execute a list of commands'''
         for command_instruction in commands:
             command = command_instruction[0]
             if command not in ('turn', 'move', 'teleport'):
