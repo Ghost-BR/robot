@@ -2,7 +2,7 @@
 
 import unittest
 
-from robot import robot
+import robot
 
 
 class RobotTestCase(unittest.TestCase):
