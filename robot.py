@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-VALID_ORIENTATION = ['N', 'E', 'S', 'W']
+VALID_DIRECTION = ['N', 'E', 'S', 'W']
 
-MAP_ORIENTATION = {
+MAP_DIRECTION = {
     'N': 0,
     'E': 1,
     'S': 2,
     'W': 3,
 }
 
-MOVE = {
+MOVE_MAP = {
     'N': (0, 1),
     'E': (1, 0),
     'S': (0, -1),
@@ -29,28 +29,28 @@ class CommandError(Exception):
 class Robot(object):
     '''Robot that can move in a board'''
 
-    def __init__(self, pos=(0, 0), pointing='N', limits=(10, 10),
+    def __init__(self, pos=(0, 0), direction='N', limits=(10, 10),
                  position=None):
         '''pos tuple(x, y)
-        pointing orientation
-        or position tuple( tuple(x,y), orientation)
+        direction must be in VALID_DIRECTION
+        or position tuple( tuple(x,y), direction)
         limits possible area that robot can move
         '''
         if position is not None:
             pos = position[0]
-            pointing = position[1]
+            direction = position[1]
         self.limit_x, self.limit_y = limits
         self.pos = pos
-        self.pointing = pointing
+        self.direction = direction
 
     @property
-    def pointing(self):
+    def direction(self):
         return self._pointing
 
-    @pointing.setter
-    def pointing(self, new_pointing):
-        if new_pointing not in VALID_ORIENTATION:
-            raise ValueError('{} is not a valid value for pointing'
+    @direction.setter
+    def direction(self, new_pointing):
+        if new_pointing not in VALID_DIRECTION:
+            raise ValueError('{} is not a valid value for direction'
                              .format(new_pointing))
         self._pointing = new_pointing
 
@@ -70,7 +70,7 @@ class Robot(object):
 
     def turn(self, direction):
         '''turn robot to left or right'''
-        index = MAP_ORIENTATION[self.pointing]
+        index = MAP_DIRECTION[self.direction]
         if direction == 'L':
             index -= 1
         elif(direction == 'R'):
@@ -79,11 +79,11 @@ class Robot(object):
             raise ValueError('{} is not a valid value for direction'
                              .format(direction))
 
-        self.pointing = VALID_ORIENTATION[index % 4]
+        self.direction = VALID_DIRECTION[index % 4]
 
     def move(self):
         '''Robot move forward'''
-        x, y = MOVE[self._pointing]
+        x, y = MOVE_MAP[self._pointing]
         self.pos = (self._x + x, self._y + y)
 
     def teleport(self, new_pos):
@@ -113,4 +113,4 @@ if __name__ == '__main__':
     r = Robot(position=position, limits=limits)
     r.from_commands(commands)
     x, y = r.pos
-    print('{0} {1} {2}'.format(x, y, r.pointing))
+    print('{0} {1} {2}'.format(x, y, r.direction))

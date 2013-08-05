@@ -12,63 +12,63 @@ class RobotTestCase(unittest.TestCase):
     def test_create(self):
         r = robot.Robot()
         self.assertEqual(r.pos, (0, 0))
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
         r = robot.Robot((6, 7), 'E')
         self.assertEqual(r.pos, (6, 7))
-        self.assertEqual(r.pointing, 'E')
+        self.assertEqual(r.direction, 'E')
         r = robot.Robot(position=((6, 7), 'E'))
         self.assertEqual(r.pos, (6, 7))
-        self.assertEqual(r.pointing, 'E')
-        r = robot.Robot(pos=(2, 2), pointing='S', position=((6, 7), 'E'))
+        self.assertEqual(r.direction, 'E')
+        r = robot.Robot(pos=(2, 2), direction='S', position=((6, 7), 'E'))
         self.assertEqual(r.pos, (6, 7))
-        self.assertEqual(r.pointing, 'E')
+        self.assertEqual(r.direction, 'E')
 
     def test_posision(self):
         r = robot.Robot()
         self.assertEqual(r.pos, (0, 0))
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
         r = robot.Robot((3, 4), 'S')
         self.assertEqual(r.pos, (3, 4))
-        self.assertEqual(r.pointing, 'S')
+        self.assertEqual(r.direction, 'S')
 
     def test_direction(self):
         r = robot.Robot()
-        r.pointing = 'N'
-        self.assertEqual(r.pointing, 'N')
-        r.pointing = 'S'
-        self.assertEqual(r.pointing, 'S')
-        r.pointing = 'E'
-        self.assertEqual(r.pointing, 'E')
-        r.pointing = 'W'
-        self.assertEqual(r.pointing, 'W')
+        r.direction = 'N'
+        self.assertEqual(r.direction, 'N')
+        r.direction = 'S'
+        self.assertEqual(r.direction, 'S')
+        r.direction = 'E'
+        self.assertEqual(r.direction, 'E')
+        r.direction = 'W'
+        self.assertEqual(r.direction, 'W')
 
         with self.assertRaises(ValueError):
-            r.pointing = 'H'
-            r.pointing = 'R'
-            r.pointing = 'A'
+            r.direction = 'H'
+            r.direction = 'R'
+            r.direction = 'A'
 
     def test_turn(self):
-        r = robot.Robot(pointing='N')
-        self.assertEqual(r.pointing, 'N')
+        r = robot.Robot(direction='N')
+        self.assertEqual(r.direction, 'N')
         r.turn('L')
-        self.assertEqual(r.pointing, 'W')
+        self.assertEqual(r.direction, 'W')
         r.turn('L')
-        self.assertEqual(r.pointing, 'S')
+        self.assertEqual(r.direction, 'S')
         r.turn('L')
-        self.assertEqual(r.pointing, 'E')
+        self.assertEqual(r.direction, 'E')
         r.turn('L')
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
         r.turn('R')
-        self.assertEqual(r.pointing, 'E')
+        self.assertEqual(r.direction, 'E')
         r.turn('R')
-        self.assertEqual(r.pointing, 'S')
+        self.assertEqual(r.direction, 'S')
         r.turn('R')
-        self.assertEqual(r.pointing, 'W')
+        self.assertEqual(r.direction, 'W')
         r.turn('R')
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
 
     def test_move(self):
-        r = robot.Robot(pos=(0, 0), pointing='N')
+        r = robot.Robot(pos=(0, 0), direction='N')
         r.move()
         self.assertEqual(r.pos, (0, 1))
         r.turn('R')
@@ -108,14 +108,14 @@ class RobotTestCase(unittest.TestCase):
         ]
         r.from_commands(command_list)
         self.assertEqual(r.pos, (1, 1))
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
 
         command_list = [
             ('teleport', (5, 5)),
         ]
         r.from_commands(command_list)
         self.assertEqual(r.pos, (5, 5))
-        self.assertEqual(r.pointing, 'N')
+        self.assertEqual(r.direction, 'N')
 
         self.assertRaises(robot.CommandError, r.from_commands, [('pos',)])
 
